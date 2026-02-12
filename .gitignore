@@ -216,3 +216,6 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
+data_zip\
+data_zip/
+AIMLCh1/
