@@ -14,8 +14,9 @@ class DataExtractor:
         files = [f for f in os.listdir(extract_from) if f.endswith('.zip')]
 
         for file in files:
+            zip_path = os.path.join(extract_from, file)
             save_path = os.path.join(extract_to, os.path.splitext(file)[0])
-            with zipfile.ZipFile(save_path, 'r') as zip_ref:
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(save_path)
                 cls._xtract_paths[os.path.splitext(file)[0]] = save_path
                 
