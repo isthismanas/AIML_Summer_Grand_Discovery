@@ -22,9 +22,15 @@ scikit-learn
 
 
 
-Competition files:
+### Competition files:
 
 Manas_main.ipynb
+
+
 dataloader.py
+
+
 best_model.pth
+
+
 final_model.csv
