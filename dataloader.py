@@ -32,6 +32,6 @@ class DataExtractor:
     @classmethod
     def get_internal_paths(cls, directory: str):
         x = [os.path.join(directory, file) for file in os.listdir(directory)]
-        return {str(file).split('\\')[-1]: os.path.join(directory, file) for file in x}
+        return {str(file).split('\\')[-1]: file for file in x}
 
 
