@@ -84,28 +84,22 @@ class DataViewer:
 
     @classmethod
     def inspect_sample(cls, sample, sample_idx=0):
-        # 1. RGB (High-Fidelity 70% Res)
         rgb = sample['rgb'].permute(1, 2, 0).numpy()
         rgb = (rgb * [0.229, 0.224, 0.225]) + [0.485, 0.456, 0.406]
-        
-        # 2. Advanced Local Contrast Enhancement (CLAHE)
         depth_raw = sample['depth'].squeeze().numpy().astype(np.float32)
         
-        # Step A: Normalize to 0-255 for OpenCV's CLAHE
+        #Normalize to 0-255 for OpenCV's CLAHE
         v_min, v_max = np.percentile(depth_raw, [2, 98])
         depth_norm = np.clip(depth_raw, v_min, v_max)
         depth_norm = ((depth_norm - v_min) / (v_max - v_min) * 255).astype(np.uint8)
-        
-        # Step B: Create CLAHE object (clipLimit=3.0, tileGridSize=(8,8))
-        # This amplifies the tiny height differences on the leaf surface
+        #CCLAHE object (clipLimit=3.0, tileGridSize=(8,8))
         clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
         depth_enhanced = clahe.apply(depth_norm)
         
-        # Step C: Edge Sharpening (Unsharp Mask)
+        #Edge Sharpening
         blurred = cv2.GaussianBlur(depth_enhanced, (5, 5), 0)
         sharpened = cv2.addWeighted(depth_enhanced, 1.5, blurred, -0.5, 0)
 
-        # 3. Final Visualization with the 'Turbo' colormap (very high edge visibility)
         plt.figure(figsize=(16, 7))
         plt.subplot(1, 2, 1)
         plt.imshow(np.clip(rgb, 0, 1))
@@ -113,7 +107,7 @@ class DataViewer:
         plt.axis('off')
         
         plt.subplot(1, 2, 2)
-        # 'turbo' is much more aggressive for finding edges than 'plasma'
+
         plt.imshow(sharpened, cmap='turbo') 
         plt.title("Final Local Contrast Enhancement (CLAHE)")
         plt.axis('off')
